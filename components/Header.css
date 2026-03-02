@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --hsj-blue: #1a3c6e;
+  --hsj-orange: #f07c24;
+  --hsj-light: #f4f7fc;
+  --hsj-text: #1a2b4a;
+  --hsj-muted: #7a8fa6;
+}
+
+.hsj-header {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 12px rgba(26,60,110,0.12);
+}
+
+/* TOP BAR */
+.top-bar {
+  background: var(--hsj-blue);
+  color: #fff;
+  font-size: 0.78rem;
+}
+
+.top-bar-inner {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.top-ratings {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.rating-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+.rating-item img {
+  display:block;
+}
+
+.rating-item.google { color: #fbbc04; }
+.rating-item.tripadvisor { color: #34e0a1; }
+.rating-item.tourradar { color: #fff; }
+
+.top-bar-divider {
+  color: #F7931D;
+}
+
+.top-bar-alert {
+  flex: 1;
+  text-align: center;
+  font-weight: 100;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  font-family: Roboto;
+}
+
+.top-social {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.top-social a {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.top-social a:hover { opacity: 1; }
+
+/* MID BAR */
+.mid-bar {
+  background: #fff;
+  border-bottom: 1px solid rgba(26,60,110,0.08);
+}
+
+.mid-bar-inner {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brand-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.search-wrap {
+  flex: 1;
+  /* max-width: 480px; */
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  right: 34rem;
+  color: var(--hsj-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 2.5rem;
+  border: 1.5px solid rgba(26,60,110,0.15);
+  border-radius: 100px;
+  font-family: Montserrat;
+  font-size: 0.85rem;
+  color: var(--hsj-text);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input::placeholder { color: var(--hsj-muted); }
+.search-input:focus { border-color: var(--hsj-blue); }
+
+.whatsapp-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #174B8B;
+  /* font-weight: 100; */
+  font-size: 1.1rem;
+  font-family: Montserrat;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.whatsapp-btn:hover { opacity: 0.8; }
+
+/* NAV BAR */
+.nav-bar {
+  background: #fff;
+  border-bottom: 2px solid var(--hsj-light);
+}
+
+.nav-bar-inner {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--hsj-blue);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+  transform-origin: center;
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 3.2rem;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.main-nav::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  color: var(--hsj-text);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0 0.8rem;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--hsj-blue);
+  border-bottom-color: var(--hsj-orange);
+}
+
+.login-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  background: var(--hsj-orange);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.login-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* MOBILE NAV */
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-top: 1px solid rgba(26,60,110,0.08);
+  padding: 0.5rem 1.5rem 1rem;
+}
+
+.mobile-nav-link {
+  color: var(--hsj-text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(26,60,110,0.06);
+  transition: color 0.2s;
+}
+
+.mobile-nav-link:hover { color: var(--hsj-blue); }
+
+.mobile-login {
+  margin-top: 1rem;
+  text-align: center;
+  display: block;
+  padding: 0.65rem;
+}
+
+@media (max-width: 900px) {
+  .main-nav { display: none; }
+  .hamburger { display: flex; }
+  .top-bar-alert { display: none; }
+}
+
+@media (max-width: 600px) {
+  .top-ratings { display: none; }
+  .whatsapp-btn span { display: none; }
+}
+@media (max-width: 375px) {
+  .brand-logo img { height: 30px; }
+  .search-wrap { display: none; } 
+  .whatsapp-btn { display: none; }
+}
+@media (max-width: 475px) {
+  .brand-logo img { height: 30px; }
+  .search-wrap { display: none; } 
+  .whatsapp-btn { display: none; }
+}
