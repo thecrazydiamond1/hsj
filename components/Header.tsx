@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Header.css";
 import NepalDropdown from "./headerDropdowns/nepalDropdown";
 
@@ -20,6 +20,20 @@ const navItems = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchVal, setSearchVal] = useState("");
+  const alerts = [
+    "💥 Big Savings Alert! Get Up to 40% Discount Today",
+    "🚀 Book today and save more",
+    "🎁 Exclusive deals on day tours"
+  ];
+  const [currentAlert, setCurrentAlert] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentAlert((prev) => (prev + 1) % alerts.length);
+    }, 3000); 
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="hsj-header">
@@ -45,7 +59,7 @@ export default function Header() {
           </div>
 
           <div className="top-bar-alert">
-            💥 Big Savings Alert! Get Up to 40% Discount Today          
+             {alerts[currentAlert]}         
           </div>
 
           <div className="top-social">
