@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import "./Header.css";
+import NepalDropdown from "./headerDropdowns/nepalDropdown";
 
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Nepal", href: "/nepal" },
+  // { label: "Home", href: "/" },
+  // { label: "Nepal", href: "/nepal" },
   { label: "Activities", href: "/activities" },
   { label: "Tibet", href: "/tibet" },
   { label: "Day Tours", href: "/day-tours" },
@@ -103,7 +104,23 @@ export default function Header() {
             <span /><span /><span />
           </button>
 
+          <div className="mobile-search-wrap">
+            <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search tours..."
+              value={searchVal}
+              onChange={e => setSearchVal(e.target.value)}
+            />
+          </div>
+
           <nav className="main-nav">
+            <Link href="/" className="nav-link">Home</Link>
+            <NepalDropdown />
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className="nav-link">
                 {item.label}
@@ -117,6 +134,8 @@ export default function Header() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="mobile-nav">
+            <Link href="/" className="mobile-nav-link">Home</Link>
+            <NepalDropdown />
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 {item.label}
