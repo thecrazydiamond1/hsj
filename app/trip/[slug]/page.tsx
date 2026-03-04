@@ -26,17 +26,21 @@ useEffect(() => {
       lastScrollY.current = window.scrollY;
 
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
+        if (scrollingDown && entry.isIntersecting) {
           setActiveTab(entry.target.getAttribute("data-section") || "");
+        } else if (!scrollingDown && !entry.isIntersecting) {
+          // when scrolling up, activate the previous section
+          const sections = Object.keys(sectionRefs.current);
+          const idx = sections.indexOf(entry.target.getAttribute("data-section") || "");
+          if (idx > 0) setActiveTab(sections[idx - 1]);
         }
       });
     },
     {
-      rootMargin: "-155px 0px -40% 0px",  // tighter bottom margin
+      rootMargin: "-155px 0px -40% 0px",
       threshold: 0
     }
   );
-
   Object.values(sectionRefs.current).forEach(el => el && observer.observe(el));
   return () => observer.disconnect();
 }, []);
@@ -435,7 +439,7 @@ const scrollToSection = (name: string) => {
           </div>
         )}
           {/* Expert advice card — shown on Departure/Map/FAQ tabs */}
-          {["Departure Dates", "Map", "Equipment"].includes(activeTab) && (
+          {["Departure Dates", "Map", "Equipment", "FAQ"].includes(activeTab) && (
             <div className="tp-expert-card">
               <div className="tp-expert-header">
                 <strong>Need Expert Advice?</strong>
