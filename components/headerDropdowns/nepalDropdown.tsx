@@ -19,7 +19,7 @@ const nepalRegions = [
     name: "Annapurna Region",
     treks: [
       { label: "Annapurna Base Camp Trek - 11 Days", href: "/nepal/annapurna-base-camp" },
-      { label: "Annapurna Circuit Trek - 12 Days", href: "/nepal/annapurna-circuit" },
+      { label: "Annapurna Circuit Trek - 12 Days", href: "/trip/annapurna-circuit-trek" },
       { label: "Ghorepani Trek - 9 Days", href: "/nepal/ghorepani" },
       { label: "Annapurna Base Camp Trek via Poonhill - 16 Days", href: "/nepal/abc-poonhill" },
       { label: "Mardi Base Camp Trek - 7 Days", href: "/nepal/mardi-base-camp" },

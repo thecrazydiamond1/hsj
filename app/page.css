@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 .page {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'MontSerrat', sans-serif;
   color: #fff;
   background: #0a0a0a;
 }
@@ -46,7 +48,7 @@
 }
 
 .hero h1 {
-  font-family: 'DM Serif Display', serif;
+  font-family: inherit;
   font-size: clamp(3rem, 7vw, 5.5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -79,7 +81,7 @@
 .btn-primary {
   background: #e8ff5a;
   color: #0a0a0a;
-  font-family: 'DM Sans', sans-serif;
+  font-family: inherit;
   font-weight: 500;
   font-size: 0.9rem;
   padding: 0.75rem 1.75rem;
@@ -97,7 +99,7 @@
 .btn-ghost {
   background: transparent;
   color: rgba(255,255,255,0.6);
-  font-family: 'DM Sans', sans-serif;
+  font-family: inherit;
   font-weight: 400;
   font-size: 0.9rem;
   padding: 0.75rem 1.75rem;
@@ -159,7 +161,7 @@
 }
 
 .feature-card h3 {
-  font-family: 'DM Serif Display', serif;
+  font-family: inherit;
   font-size: 1.2rem;
   margin: 0;
   color: #fff;
@@ -193,7 +195,7 @@
 }
 
 .cta-box h2 {
-  font-family: 'DM Serif Display', serif;
+  font-family: inherit;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   color: #0a0a0a;
   margin: 0;
@@ -204,7 +206,7 @@
 .btn-dark {
   background: #0a0a0a;
   color: #fff;
-  font-family: 'DM Sans', sans-serif;
+  font-family: inherit;
   font-weight: 500;
   font-size: 0.9rem;
   padding: 0.8rem 1.75rem;

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   --hsj-blue: #1a3c6e;
@@ -9,7 +10,7 @@
 }
 
 .hsj-header {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   width: 100%;
   position: sticky;
   top: 0;
@@ -67,7 +68,7 @@
   font-weight: 100;
   font-size: 0.9rem;
   letter-spacing: 0.01em;
-  font-family: Roboto;
+  font-family: 'Roboto';
 }
 
 .top-social {
