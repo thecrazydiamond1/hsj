@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 .nd-wrap {
           position: relative;
         }
@@ -60,7 +61,7 @@
         .nd-region-icon { font-size: 1.1rem; }
 
         .nd-region-title {
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: 'Montserrat', sans-serif;
           font-size: 0.95rem;
           font-weight: 700;
           color: #1a2b4a;
@@ -91,7 +92,7 @@
           padding: 0.4rem 0.3rem;
           color: #2a4a7a;
           text-decoration: none;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: 'Montserrat', sans-serif;
           font-size: 0.83rem;
           font-weight: 400;
           line-height: 1.45;

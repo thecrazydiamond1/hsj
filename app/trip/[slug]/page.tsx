@@ -5,6 +5,7 @@ import Link from "next/link";
 import { treks } from "@/lib/treks";
 import { useState, useEffect, useRef } from "react"; // add useEffect, useRef
 import "./trip.css";
+import Script from "next/script";
 const tabs = ["Overview", "Itinerary", "Inclusions/Exclusions", "Departure Dates", "Map", "Equipment", "FAQ", "Reviews"];
 
 export default function TripPage({ params }: { params: { slug: string } }) {
@@ -15,39 +16,62 @@ export default function TripPage({ params }: { params: { slug: string } }) {
   const [activePkg, setActivePkg] = useState("Standard Package");
   const [tripType, setTripType] = useState<"group" | "private">("group");
   const [openGear, setOpenGear] = useState<string[]>([]);
-const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-const lastScrollY = useRef(0);
+  const lastScrollY = useRef(0);
 
-useEffect(() => {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const scrollingDown = window.scrollY > lastScrollY.current;
-      lastScrollY.current = window.scrollY;
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const scrollingDown = window.scrollY > lastScrollY.current;
+        lastScrollY.current = window.scrollY;
 
-      entries.forEach(entry => {
-        if (scrollingDown && entry.isIntersecting) {
-          setActiveTab(entry.target.getAttribute("data-section") || "");
-        } else if (!scrollingDown && !entry.isIntersecting) {
-          // when scrolling up, activate the previous section
-          const sections = Object.keys(sectionRefs.current);
-          const idx = sections.indexOf(entry.target.getAttribute("data-section") || "");
-          if (idx > 0) setActiveTab(sections[idx - 1]);
-        }
-      });
-    },
-    {
-      rootMargin: "-155px 0px -40% 0px",
-      threshold: 0
-    }
-  );
-  Object.values(sectionRefs.current).forEach(el => el && observer.observe(el));
-  return () => observer.disconnect();
-}, []);
+        entries.forEach(entry => {
+          if (scrollingDown && entry.isIntersecting) {
+            setActiveTab(entry.target.getAttribute("data-section") || "");
+          } else if (!scrollingDown && !entry.isIntersecting) {
+            // when scrolling up, activate the previous section
+            const sections = Object.keys(sectionRefs.current);
+            const idx = sections.indexOf(entry.target.getAttribute("data-section") || "");
+            if (idx > 0) setActiveTab(sections[idx - 1]);
+          }
+        });
+      },
+      {
+        rootMargin: "-155px 0px -40% 0px",
+        threshold: 0
+      }
+    );
+    Object.values(sectionRefs.current).forEach(el => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    // clean up any previous instance
+    const old = document.getElementById("wetravel-script");
+    if (old) old.remove();
 
-const scrollToSection = (name: string) => {
-  sectionRefs.current[name]?.scrollIntoView({ behavior: "smooth", block: "start" });
-};
+    const script = document.createElement("script");
+    script.id = "wetravel-script";
+    script.src = "https://cdn.wetravel.com/widgets/embed_calendar.js";
+    script.async = true;
+    script.setAttribute("data-env", "https://hsjtravel.wetravel.com");
+    script.setAttribute("data-version", "v0.3");
+    script.setAttribute("data-uid", "597436");
+    script.setAttribute("data-uuid", "80744020");
+    script.setAttribute("data-color", "1850b3");
+    script.setAttribute("data-text", "Book Now");
+    script.setAttribute("data-title", "Select Departure Date");
+
+    document.getElementById("wetravel-container")?.appendChild(script);
+
+    return () => {
+      document.getElementById("wetravel-script")?.remove();
+    };
+  }, []);
+  
+  const scrollToSection = (name: string) => {
+    sectionRefs.current[name]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   if (!trek) return <div style={{ padding: "4rem 2rem" }}>Trek not found.</div>;
 
@@ -230,7 +254,10 @@ const scrollToSection = (name: string) => {
                   <div className="tp-pkg-card-header">
                     <div>
                       <div className="tp-pkg-name">{trek.title} Package Price</div>
-                      <div className="tp-pkg-stars">{"★".repeat(activePkgData.stars)}{"☆".repeat(5 - activePkgData.stars)} {activePkgData.name}</div>
+                      <div className="tp-pkg-stars">
+                        <span>{"★".repeat(activePkgData.stars)}{"☆".repeat(5 - activePkgData.stars)}</span>
+                        <p>{activePkgData.name}</p>
+                      </div>
                     </div>
                     <div className="tp-pkg-price-wrap">
                       <span className="tp-pkg-badge">Standard</span>
@@ -243,7 +270,7 @@ const scrollToSection = (name: string) => {
                       <h3 className="tp-inc-title">Included</h3>
                       <ul>
                         {trek.inclusions.map((item, i) => (
-                          <li key={i}><span className="tp-check">✅</span>{item}</li>
+                          <li key={i}><span className="tp-check"><img src="/icons/tick.svg"/></span>{item}</li>
                         ))}
                       </ul>
                     </div>
@@ -251,7 +278,7 @@ const scrollToSection = (name: string) => {
                       <h3 className="tp-exc-title">Excluded</h3>
                       <ul>
                         {trek.exclusions.map((item, i) => (
-                          <li key={i}><span className="tp-cross">❌</span>{item}</li>
+                          <li key={i}><span className="tp-cross"><img src="/icons/cross.svg"/></span>{item}</li>
                         ))}
                       </ul>
                     </div>
@@ -260,7 +287,7 @@ const scrollToSection = (name: string) => {
               </div>
             </div>
 
-          {/* DEPARTURE DATES */}
+            {/* DEPARTURE DATES */}
             <div className="tp-section" data-section="Departure Dates" ref={el => { sectionRefs.current["Departure Dates"] = el; }}>
               <div className="tp-card">
                 <h2 className="tp-section-title">Departures & Availability</h2>
@@ -268,12 +295,7 @@ const scrollToSection = (name: string) => {
                   <button className={`tp-trip-tab${tripType === "group" ? " active" : ""}`} onClick={() => setTripType("group")}>Group Trips</button>
                   <button className={`tp-trip-tab${tripType === "private" ? " active" : ""}`} onClick={() => setTripType("private")}>Private Trips</button>
                 </div>
-                <p className="tp-cal-label">Select Departure Date</p>
-                <p className="tp-cal-duration">Trip duration: {trek.stats.duration}</p>
-                <div className="tp-cal-placeholder">
-                  <div className="tp-cal-mock">📅 Calendar widget — integrate your booking provider here (e.g. WeTravel)</div>
-                  <p className="tp-powered-by">Powered by <strong>wetravel</strong></p>
-                </div>
+                <div id="wetravel-container" className="tp-wetravel-wrap" />
               </div>
             </div>
 
