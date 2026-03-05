@@ -358,3 +358,49 @@
   }
 
 }
+/* ── REDUCE NAV GAP FOR MEDIUM SCREENS ── */
+@media (max-width: 1300px) {
+  .main-nav {
+    gap: 1.5rem;  /* was 3.2rem — too wide for 1366px */
+  }
+
+  .nav-link {
+    font-size: 0.78rem;
+    padding: 0 0.4rem;
+  }
+
+  .whatsapp-btn {
+    font-size: 0.9rem;
+  }
+
+  .mid-bar-inner {
+    gap: 1rem;
+  }
+}
+
+/* ── 1366px SPECIFIC ── */
+@media (max-width: 1400px) {
+  .main-nav {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .main-nav {
+    gap: 1rem;
+  }
+
+  .nav-link {
+    font-size: 0.75rem;
+    padding: 0 0.3rem;
+  }
+
+  .login-btn {
+    font-size: 0.76rem;
+    padding: 0.35rem 0.9rem;
+  }
+
+  .whatsapp-btn {
+    font-size: 0.85rem;
+  }
+}
