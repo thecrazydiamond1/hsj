@@ -30,6 +30,12 @@ export type TrekData = {
     title: string;
     description: string;
   }[];
+  mapRoute:{
+    name: string,
+    lat: number,
+    lng: number,
+    day: number
+  }[];
   itinerary: {
     day: number;
     title: string;
@@ -53,6 +59,14 @@ export type TrekData = {
       a: string;
     }[];
   }[];
+  moments: {
+  user: string;
+  location: string;
+  trek: string;
+  desc: string;
+  thumb: string;
+  src: string;
+}[];
   reviews: {
     name: string;
     platform: "google" | "tripadvisor";
@@ -66,8 +80,21 @@ export type TrekData = {
     category: string;
     icon: string;
     count: number;
-    items: string[];
+    items:{
+      name: string,
+      detail: string
+    }[];
   }[];
+  recommended: {
+  title: string;
+  location: string;
+  days: number;
+  price: number;
+  originalPrice: number;
+  image: string;
+  slug: string;
+  featured: boolean;
+}[];
 };
 
 export const treks: Record<string, TrekData> = {
@@ -85,6 +112,60 @@ export const treks: Record<string, TrekData> = {
       "/images/treks/annapurna-circuit-trek/gallery-6.jpg",
       "/images/treks/annapurna-circuit-trek/gallery-7.jpg",
       "/images/treks/annapurna-circuit-trek/gallery-8.jpg",
+    ],
+    moments: [
+      {
+        user: "Deck and Strebella",
+        location: "Australia",
+        trek: "Annapurna Circuit Trek",
+        desc: "Deck and Strebella sharing their Annapurna experience...",
+        thumb: "/images/moments/famphoto.jpg",
+        src: "/videos/moment-1.mp4",
+      },
+      {
+        user: "Deck and Strebella",
+        location: "Australia",
+        trek: "Annapurna Circuit Trek",
+        desc: "Deck and Strebella sharing their Annapurna experience...",
+        thumb: "/images/moments/moments-2.jpg",
+        src: "/videos/moment-2.mp4",
+      },
+      {
+        user: "Deck and Strebella",
+        location: "Australia",
+        trek: "Annapurna Circuit Trek",
+        desc: "Deck and Strebella sharing their Annapurna experience...",
+        thumb: "/images/moments/moments-3.jpg",
+        src: "/videos/moment-3.mp4",
+      },
+      {
+        user: "Deck and Strebella",
+        location: "Australia",
+        trek: "Annapurna Circuit Trek",
+        desc: "Deck and Strebella sharing their Annapurna experience...",
+        thumb: "/images/moments/famphoto.jpg",
+        src: "/videos/moment-1.mp4",
+      },
+      {
+        user: "Deck and Strebella",
+        location: "Australia",
+        trek: "Annapurna Circuit Trek",
+        desc: "Deck and Strebella sharing their Annapurna experience...",
+        thumb: "/images/moments/moments-2.jpg",
+        src: "/videos/moment-4.mp4",
+      },
+    ],
+    mapRoute: [
+      { name: "Kathmandu", lat: 27.7172, lng: 85.3240, day: 1 },
+      { name: "Besisahar", lat: 28.2300, lng: 84.3900, day: 2 },
+      { name: "Bahundanda", lat: 28.3167, lng: 84.3333, day: 3 },
+      { name: "Chame", lat: 28.5500, lng: 84.2300, day: 4 },
+      { name: "Pisang", lat: 28.6333, lng: 84.1500, day: 5 },
+      { name: "Manang", lat: 28.6667, lng: 84.0167, day: 7 },
+      { name: "Thorong La Pass", lat: 28.7833, lng: 83.9333, day: 10 },
+      { name: "Muktinath", lat: 28.8167, lng: 83.8667, day: 11 },
+      { name: "Jomsom", lat: 28.7833, lng: 83.7333, day: 12 },
+      { name: "Pokhara", lat: 28.2096, lng: 83.9856, day: 14 },
     ],
     stats: {
       duration: "14 days",
@@ -218,19 +299,108 @@ export const treks: Record<string, TrekData> = {
       },
     ],
     reviews: [
-      { name: "Marita Chuck", platform: "google", rating: 5, title: "Highly recommend HSJ", body: "Treked Annapurna circuit and base camp. This is the 3rd time using HSJ. Very well organised team. Usha my email go to with questions answered promptly and answered everything I needed to [...]", avatar: "/images/reviews/marita.jpg" },
+      { name: "Marita Chuck", platform: "google", rating: 4, title: "Highly recommend HSJ", body: "Treked Annapurna circuit and base camp. This is the 3rd time using HSJ. Very well organised team. Usha my email go to with questions answered promptly and answered everything I needed to [...]", avatar: "/images/reviews/marita.jpg" },
       { name: "Nuno G", platform: "tripadvisor", rating: 5, title: "Once in a lifetime!", body: "Amazing views and our guide Tikaram was very helpful and funny. 5 stars for him!! Amazing time I had. Me and my friend loved every bit of it.", avatar: "/images/reviews/nuno.jpg" },
       { name: "Felix B", platform: "tripadvisor", rating: 5, title: "Thank you for all", body: "On our trek, we met the guide (Tikaram). He was accompanying a very nice Indian family in three generations were doing the trek. The oldest member of the family was 80 years old! An incredible [...]", avatar: "/images/reviews/felix.jpg" },
       { name: "Companion540 76802933", platform: "tripadvisor", rating: 5, title: "Best way to experience Nepal", body: "We did the 14 days Nepal budget tour and we could not be more happy with our choice. In only 2 weeks we visited Kathmandu, Chitwan national park, Pokhara and did a 5 day trek in the Annapurna [...]", avatar: "/images/reviews/companion.jpg" },
+      { name: "Marita Chuck", platform: "google", rating: 5, title: "Highly recommend HSJ", body: "Treked Annapurna circuit and base camp. This is the 3rd time using HSJ. Very well organised team. Usha my email go to with questions answered promptly and answered everything I needed to [...]", avatar: "/images/reviews/marita.jpg" },
+      { name: "Nuno G", platform: "tripadvisor", rating: 5, title: "Once in a lifetime!", body: "Amazing views and our guide Tikaram was very helpful and funny. 5 stars for him!! Amazing time I had. Me and my friend loved every bit of it.", avatar: "/images/reviews/nuno.jpg" },
+      { name: "Felix B", platform: "tripadvisor", rating: 5, title: "Thank you for all", body: "On our trek, we met the guide (Tikaram). He was accompanying a very nice Indian family in three generations were doing the trek. The oldest member of the family was 80 years old! An incredible [...]", avatar: "/images/reviews/felix.jpg" },
+      { name: "Companion540 76802933 777777777", platform: "tripadvisor", rating: 5, title: "Best way to experience Nepal", body: "We did the 14 days Nepal budget tour and we could not be more happy with our choice. In only 2 weeks we visited Kathmandu, Chitwan national park, Pokhara and did a 5 day trek in the Annapurna [...]", avatar: "/images/reviews/companion.jpg" },
     ],
     mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d453155.1522195024!2d83.72815!3d28.5967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3995f5b87d99fced%3A0x6032e48a2b3b4d4d!2sAnnapurna%20Circuit!5e0!3m2!1sen!2snp!4v1234567890",
     gearList: [
-      { category: "Clothing", icon: "👕", count: 10, items: ["Moisture-wicking base layers", "Fleece jacket", "Down jacket", "Waterproof jacket", "Trekking pants", "Thermal underwear", "Gloves", "Warm hat", "Sun hat", "Buff/neck gaiter"] },
-      { category: "Foot wear", icon: "👟", count: 10, items: ["Waterproof trekking boots", "Trail runners", "Camp sandals", "Wool socks (5 pairs)", "Liner socks", "Gaiters", "Boot laces (spare)", "Insoles", "Waterproofing spray", "Blister kit"] },
-      { category: "Health & Hygiene", icon: "❤️", count: 7, items: ["First aid kit", "Diamox (altitude sickness)", "Sunscreen SPF50+", "Lip balm", "Hand sanitizer", "Water purification tablets", "Personal medications"] },
-      { category: "Electronics", icon: "📷", count: 6, items: ["Camera", "Power bank", "Universal adapter", "Headlamp + batteries", "Solar charger", "Satellite communicator"] },
-      { category: "Sleeping gear", icon: "🌡️", count: 7, items: ["Sleeping bag (-10°C rated)", "Sleeping bag liner", "Inflatable pillow", "Earplugs", "Eye mask", "Sleeping mat (if camping)", "Tent (if camping)"] },
-      { category: "Bags & packs", icon: "🎒", count: 9, items: ["Daypack (20-30L)", "Duffel bag for porter", "Rain cover for pack", "Dry bags", "Stuff sacks", "Packing cubes", "Waterproof document bag", "Money belt", "Trekking pole bag"] },
+      { category: "Clothing", icon: `<img src="/icons/clothing.svg"/>`, count: 10, items: [      
+        { name: "Moisture-wicking base layers", detail: "3-4 sets (top & bottom)" },
+        { name: "Insulating mid-layers", detail: "Fleece jacket or wool sweater" },
+        { name: "T-shirts", detail: "3-4 quick-dry shirts" },
+        { name: "Down jacket", detail: "800-fill or higher" },
+        { name: "Thermal underwear", detail: "2 sets for high altitude" },
+        { name: "Waterproof jacket", detail: "Gore-Tex or similar, with hood" },
+        { name: "Trekking pants", detail: "2-3 pairs, quick-dry material" },
+        { name: "Gloves", detail: "Warm liner + outer gloves" },
+        { name: "Warm hat", detail: "Wool or synthetic, covers ears" },
+      ] },
+      { 
+        category: "Foot wear", 
+        icon: `<img src="/icons/footwear.svg"/>`, 
+        count: 10, 
+        items: [
+          { name: "Waterproof trekking boots", detail: "Ankle support, broken in before trek" },
+          { name: "Trail runners", detail: "Lightweight alternative for lower sections" },
+          { name: "Camp sandals", detail: "For relaxing at teahouses" },
+          { name: "Wool socks", detail: "5 pairs, merino wool preferred" },
+          { name: "Liner socks", detail: "Prevents blisters under wool socks" },
+          { name: "Gaiters", detail: "Snow protection above Thorong La" },
+          { name: "Boot laces (spare)", detail: "Always carry an extra pair" },
+          { name: "Insoles", detail: "Extra cushioning for long days" },
+          { name: "Waterproofing spray", detail: "Re-treat boots every few days" },
+          { name: "Blister kit", detail: "Moleskin, tape, and antiseptic" },
+        ]
+      },
+      { 
+        category: "Health & Hygiene", 
+        icon: `<img src="/icons/health.svg"/>`, 
+        count: 7, 
+        items: [
+          { name: "First aid kit", detail: "Bandages, antiseptic, gauze" },
+          { name: "Diamox", detail: "Altitude sickness prevention medication" },
+          { name: "Sunscreen SPF50+", detail: "UV is intense at high altitude" },
+          { name: "Lip balm", detail: "SPF protection, dry air causes cracking" },
+          { name: "Hand sanitizer", detail: "Clean water is limited on trail" },
+          { name: "Water purification tablets", detail: "Backup for filter failure" },
+          { name: "Personal medications", detail: "Sufficient supply + extra days" },
+        ]
+      },
+      { 
+        category: "Electronics", 
+        icon: `<img src="/icons/electronics.svg"/>`, 
+        count: 6, 
+        items: [
+          { name: "Camera", detail: "Extra batteries, cold drains them fast" },
+          { name: "Power bank", detail: "20,000mAh minimum for long stretches" },
+          { name: "Universal adapter", detail: "Nepal uses Type C, D and M plugs" },
+          { name: "Headlamp + batteries", detail: "Essential for early summit starts" },
+          { name: "Solar charger", detail: "Backup charging above Manang" },
+          { name: "Satellite communicator", detail: "Emergency contact in no-signal zones" },
+        ]
+      },
+      { 
+        category: "Sleeping gear", 
+        icon: `<img src="/icons/sleepinggear.svg"/>`, 
+        count: 7, 
+        items: [
+          { name: "Sleeping bag", detail: "-10°C rated, down or synthetic fill" },
+          { name: "Sleeping bag liner", detail: "Adds 5°C warmth, keeps bag clean" },
+          { name: "Inflatable pillow", detail: "Lightweight, compresses to fist size" },
+          { name: "Earplugs", detail: "Teahouse walls are thin" },
+          { name: "Eye mask", detail: "Early sunrise at high altitude" },
+          { name: "Sleeping mat", detail: "Only needed if camping" },
+          { name: "Tent", detail: "Only needed for camping itinerary" },
+        ]
+      },
+      { 
+        category: "Bags & packs", 
+        icon: `<img src="/icons/bagpacks.svg"/>`, 
+        count: 9, 
+        items: [
+          { name: "Daypack", detail: "20-30L, carry essentials on trail" },
+          { name: "Duffel bag for porter", detail: "Max 15kg, soft-sided preferred" },
+          { name: "Rain cover for pack", detail: "Monsoon season essential" },
+          { name: "Dry bags", detail: "Keep electronics and clothes dry" },
+          { name: "Stuff sacks", detail: "Organise gear by category" },
+          { name: "Packing cubes", detail: "Compress clothing efficiently" },
+          { name: "Waterproof document bag", detail: "For permits, passport, cash" },
+          { name: "Money belt", detail: "Hidden under clothing for safety" },
+          { name: "Trekking pole bag", detail: "Protects poles during transport" },
+        ]
+      },
+    ],
+    recommended: [
+      { title: "Annapurna Base Camp with Poonhill Trek", location: "Nepal", days: 14, price: 850, originalPrice: 1120, image: "/images/treks/recommends/recommend-1.jpg", slug: "annapurna-base-camp", featured: true },
+      { title: "Jomsom Muktinath Tour", location: "Nepal", days: 9, price: 799, originalPrice: 1120, image: "/images/treks/recommends/recommend-2.jpg", slug: "jomsom-muktinath-tour", featured: true },
+      { title: "Ghorepani Poonhill Annapurna Trek", location: "Nepal", days: 14, price: 650, originalPrice: 1120, image: "/images/treks/recommends/recommend-3.jpg", slug: "ghorepani-poonhill", featured: true },
+      { title: "Annapurna Base Camp Trek", location: "Nepal", days: 14, price: 850, originalPrice: 1120, image: "/images/treks/recommends/recommend-1.jpg", slug: "annapurna-base-camp-2", featured: true },
     ],
   },
 };

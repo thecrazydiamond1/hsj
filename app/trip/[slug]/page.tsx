@@ -5,8 +5,56 @@ import Link from "next/link";
 import { treks } from "@/lib/treks";
 import { useState, useEffect, useRef } from "react"; // add useEffect, useRef
 import "./trip.css";
-import Script from "next/script";
 const tabs = ["Overview", "Itinerary", "Inclusions/Exclusions", "Departure Dates", "Map", "Equipment", "FAQ", "Reviews"];
+import dynamic from "next/dynamic";
+
+
+// Add above your TripPage component
+function MomentCard({ m }: { m: { user: string; location: string; trek: string; desc: string; thumb: string; src: string } }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (playing) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setPlaying(!playing);
+  };
+
+  return (
+    <div className="tp-moment-card" onClick={togglePlay}>
+      <video
+        ref={videoRef}
+        src={m.src}
+        poster={m.thumb}
+        className="tp-moment-bg"
+        loop
+        playsInline
+      />
+      <div className="tp-moment-top">
+        <div className="tp-moment-avatar"><img src="/icons/prof.svg"/></div>
+        <div>
+          <div className="tp-moment-user">{m.user}</div>
+          <div className="tp-moment-loc">
+            <img src="/icons/loc.svg"/>
+            {m.location}
+          </div>
+        </div>
+      </div>
+      {!playing && <button className="tp-moment-play"><img src="/icons/play.svg"/></button>}
+      <div className="tp-moment-bottom">
+        <div className="tp-moment-trek">
+          <img src="/icons/moun.svg"/>
+          <span>{m.trek}</span>
+        </div>
+        <div className="tp-moment-desc">{m.desc}</div>
+      </div>
+    </div>
+  );
+}
 
 export default function TripPage({ params }: { params: { slug: string } }) {
   const trek = treks[params.slug];
@@ -19,6 +67,20 @@ export default function TripPage({ params }: { params: { slug: string } }) {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const lastScrollY = useRef(0);
+  const priceCardRef = useRef<HTMLDivElement>(null);
+  const [priceCardHeight, setPriceCardHeight] = useState(0);
+
+  useEffect(() => {
+    if (priceCardRef.current) {
+      setPriceCardHeight(priceCardRef.current.offsetHeight);
+    }
+  }, []);
+
+  const showPrice = ["Overview", "Itinerary", "Inclusions/Exclusions"].includes(activeTab);
+    const TrekMap = dynamic(() => import("@/components/TrekMap"), {
+      ssr: false,
+      loading: () => <div style={{ height: "450px", background: "#f4f7fc", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", color: "#7a8fa6" }}>Loading map...</div>
+    });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,28 +108,37 @@ export default function TripPage({ params }: { params: { slug: string } }) {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-    // clean up any previous instance
-    const old = document.getElementById("wetravel-script");
-    if (old) old.remove();
+    if (tripType !== "group") return;  // only run when group is active
 
-    const script = document.createElement("script");
-    script.id = "wetravel-script";
-    script.src = "https://cdn.wetravel.com/widgets/embed_calendar.js";
-    script.async = true;
-    script.setAttribute("data-env", "https://hsjtravel.wetravel.com");
-    script.setAttribute("data-version", "v0.3");
-    script.setAttribute("data-uid", "597436");
-    script.setAttribute("data-uuid", "80744020");
-    script.setAttribute("data-color", "1850b3");
-    script.setAttribute("data-text", "Book Now");
-    script.setAttribute("data-title", "Select Departure Date");
+    // small delay to ensure container is in DOM
+    const timer = setTimeout(() => {
+      const old = document.getElementById("wetravel-script");
+      if (old) old.remove();
 
-    document.getElementById("wetravel-container")?.appendChild(script);
+      const script = document.createElement("script");
+      script.id = "wetravel-script";
+      script.src = "https://cdn.wetravel.com/widgets/embed_calendar.js";
+      script.async = true;
+      script.setAttribute("data-env", "https://hsjtravel.wetravel.com");
+      script.setAttribute("data-version", "v0.3");
+      script.setAttribute("data-uid", "597436");
+      script.setAttribute("data-uuid", "80744020");
+      script.setAttribute("data-color", "1850b3");
+      script.setAttribute("data-text", "Book Now");
+      script.setAttribute("data-title", "Select Departure Date");
+
+      const container = document.getElementById("wetravel-container");
+      if (container) {
+        container.innerHTML = "";  // clear old content
+        container.appendChild(script);
+      }
+    }, 100);
 
     return () => {
+      clearTimeout(timer);
       document.getElementById("wetravel-script")?.remove();
     };
-  }, []);
+  }, [tripType]);
   
   const scrollToSection = (name: string) => {
     sectionRefs.current[name]?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -292,10 +363,56 @@ export default function TripPage({ params }: { params: { slug: string } }) {
               <div className="tp-card">
                 <h2 className="tp-section-title">Departures & Availability</h2>
                 <div className="tp-trip-type-tabs">
-                  <button className={`tp-trip-tab${tripType === "group" ? " active" : ""}`} onClick={() => setTripType("group")}>Group Trips</button>
-                  <button className={`tp-trip-tab${tripType === "private" ? " active" : ""}`} onClick={() => setTripType("private")}>Private Trips</button>
+                  <button className={`tp-trip-tab${tripType === "group" ? " active" : ""}`} onClick={() => setTripType("group")}>Group Trip</button>
+                  <button className={`tp-trip-tab${tripType === "private" ? " active" : ""}`} onClick={() => setTripType("private")}>Private Trip</button>
                 </div>
-                <div id="wetravel-container" className="tp-wetravel-wrap" />
+
+                {tripType === "group" && (
+                  <div id="wetravel-container" className="tp-wetravel-wrap" />
+                )}
+
+                {tripType === "private" && (
+                  <div className="tp-private-form">
+                    <div className="tp-form-row">
+                      <div className="tp-form-group">
+                        <label className="tp-form-label">First Name</label>
+                        <input type="text" className="tp-form-input tp-form-underline" />
+                      </div>
+                      <div className="tp-form-group">
+                        <label className="tp-form-label">Last Name</label>
+                        <input type="text" className="tp-form-input tp-form-underline" />
+                      </div>
+                    </div>
+                    <div className="tp-form-row">
+                      <div className="tp-form-group">
+                        <label className="tp-form-label">Phone Number</label>
+                        <input type="tel" className="tp-form-input tp-form-underline" />
+                      </div>
+                      <div className="tp-form-group">
+                        <label className="tp-form-label">Departure Date</label>
+                        <input type="date" className="tp-form-date" />
+                      </div>
+                    </div>
+                    <div className="tp-form-group">
+                      <label className="tp-form-label">Message</label>
+                      <textarea placeholder="Write your message.." className="tp-form-textarea tp-form-underline" rows={1} />
+                    </div>
+                    <div className="tp-form-captcha">
+                      {/* reCAPTCHA placeholder — integrate real one later */}
+                      <div className="tp-captcha-mock">
+                        <input type="checkbox" id="not-robot" />
+                        <label htmlFor="not-robot">I'm not a robot</label>
+                        <span className="tp-captcha-logo">reCAPTCHA</span>
+                      </div>
+                    </div>
+                    <p className="tp-form-secure">
+                      <span><img src="/icons/secure.svg"/></span> Your information is kept confidential and secure
+                    </p>
+                    <button className="tp-form-submit">
+                      Send Private Trip Enquiry
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -304,14 +421,7 @@ export default function TripPage({ params }: { params: { slug: string } }) {
               <div className="tp-card">
                 <h2 className="tp-section-title">Tour Route</h2>
                 <div className="tp-map-wrap">
-                  <iframe
-                    src={trek.mapEmbedUrl}
-                    width="100%"
-                    height="380"
-                    style={{ border: 0, borderRadius: "10px" }}
-                    allowFullScreen
-                    loading="lazy"
-                  />
+                  <TrekMap route={trek.mapRoute} />
                 </div>
               </div>
             </div>
@@ -325,13 +435,24 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                   {trek.gearList.map(gear => (
                     <div key={gear.category}>
                       <button className="tp-gear-row" onClick={() => toggleGear(gear.category)}>
-                        <span>{gear.icon} {gear.category}</span>
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <span dangerouslySetInnerHTML={{ __html: gear.icon }} />
+                          {gear.category}
+                        </span>
                         <span>{gear.count} items</span>
                       </button>
                       {openGear.includes(gear.category) && (
-                        <ul className="tp-gear-items">
-                          {gear.items.map((item, i) => <li key={i}>• {item}</li>)}
-                        </ul>
+                        <div className="tp-gear-items-grid">
+                          {gear.items.map((item, i) => (
+                            <div key={i} className="tp-gear-item-card">
+                              <span className="tp-gear-dot" />
+                              <div>
+                                <div className="tp-gear-item-name">{item.name}</div>
+                                <div className="tp-gear-item-detail">{item.detail}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
                   ))}
@@ -352,7 +473,10 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                 <p className="tp-faq-intro">Find answers to the most common questions about the {trek.title}. Can't find what you're looking for? Contact us directly!</p>
                 {trek.faqs.map(section => (
                   <div key={section.category} className="tp-faq-section">
-                    <h3 className="tp-faq-category">❓ {section.category}</h3>
+                    <div className="tp-faq-items">
+                      <img src="/icons/question.svg"/> 
+                      <h3 className="tp-faq-category">{section.category}</h3>
+                    </div>
                     {section.questions.map((q, i) => {
                       const key = `${section.category}-${i}`;
                       const isOpen = openFaqs.includes(key);
@@ -376,116 +500,182 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                 ))}
               </div>
             </div>
-
-          {/* REVIEWS */}
-            <div className="tp-section" data-section="Reviews" ref={el => { sectionRefs.current["Reviews"] = el; }}>
-              <div className="tp-reviews-wave">
-                <div className="tp-reviews-scroll">
-                  {trek.reviews.map((r, i) => (
-                    <div key={i} className="tp-review-card">
-                      <div className="tp-review-top">
-                        <img src={r.avatar} alt={r.name} className="tp-review-avatar" onError={e => { (e.target as HTMLImageElement).src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(r.name) + "&background=1a3c6e&color=fff"; }} />
-                        <div className="tp-review-name">{r.name}</div>
-                        <div className="tp-review-platform">
-                          {r.platform === "google" ? "G" : "🦉"}
-                        </div>
-                      </div>
-                      <div className="tp-review-stars">{"★".repeat(r.rating)}</div>
-                      <div className="tp-review-title">{r.title}</div>
-                      <p className="tp-review-body">{r.body}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* HSJ Moments */}
-              <div className="tp-moments">
-                <h2 className="tp-moments-title">
-                  <span className="tp-moments-icon">🎥</span> HSJ Moments
-                </h2>
-                <div className="tp-moments-grid">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="tp-moment-card">
-                      <img src={`/images/moments/moment-${i}.jpg`} alt={`Moment ${i}`} />
-                      <div className="tp-moment-overlay">
-                        <span className="tp-moment-user">👤</span>
-                        <span className="tp-moment-dur">00:02</span>
-                      </div>
-                      <button className="tp-moment-play">▶</button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
         </div>
 
-        {/* ── SIDEBAR ── */}
         <aside className="tp-sidebar">
-        {["Overview", "Itinerary", "Inclusions/Exclusions"].includes(activeTab) && (
-          <div className="tp-price-card">
-            <div className="tp-price-top">
-                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.25rem" }}>
+          <div
+            className="tp-sidebar-card-wrap"
+            style={{
+              transform: showPrice ? "translateY(0px)" : `translateY(-600px)`,  /* exact sidebar height */
+              transition: "transform 1s cubic-bezier(0.4, 0, 0.2, 1)"
+            }}
+          >    
+            {/* Price card */}
+            <div  className="tp-sidebar-price" ref={priceCardRef}>
+              <div className="tp-price-card">
+                <div className="tp-price-top">
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.25rem" }}>
                     <span className="tp-price-orig">${trek.pricing.original}</span>
                     <span className="tp-price-badge">Save {trek.pricing.savePercent}%</span>
+                  </div>
+                  <div className="tp-price-main">${trek.pricing.discounted}</div>
+                  <div className="tp-price-per">per person</div>
+                </div>
+                <div className="tp-price-details">
+                  {[
+                    { icon: <img src="/icons/clock.svg" />, label: "Duration", value: trek.details.duration },
+                    { icon: <img src="/icons/highestpoint.svg" />, label: "Max Altitude", value: trek.details.maxAltitude },
+                    { icon: <img src="/icons/easy.svg" />, label: "Difficulty", value: trek.details.difficulty },
+                    { icon: <img src="/icons/groupsize.svg" />, label: "Group Size", value: trek.details.groupSize },
+                  ].map(d => (
+                    <div key={d.label} className="tp-price-row">
+                      <span className="tp-price-row-label"><span>{d.icon}</span> {d.label}</span>
+                      <span className="tp-price-row-val">{d.value}</span>
                     </div>
-                    <div className="tp-price-main">${trek.pricing.discounted}</div>
-                    <div className="tp-price-per">per person</div>
+                  ))}
                 </div>
-            <div className="tp-price-details">
-              {[
-                { icon: <img src="/icons/clock.svg" />, label: "Duration", value: trek.details.duration },
-                { icon: <img src="/icons/highestpoint.svg" />, label: "Max Altitude", value: trek.details.maxAltitude },
-                { icon: <img src="/icons/easy.svg" />, label: "Difficulty", value: trek.details.difficulty },
-                { icon: <img src="/icons/groupsize.svg" />, label: "Group Size", value: trek.details.groupSize },
-              ].map(d => (
-                <div key={d.label} className="tp-price-row">
-                  <span className="tp-price-row-label"><span>{d.icon}</span> {d.label}</span>
-                  <span className="tp-price-row-val">{d.value}</span>
+                <div className="tp-deposit-box">
+                  <strong>Secure with just ${trek.pricing.depositAmount}</strong>
+                  <span>Pay remaining balance anytime before trek</span>
                 </div>
-              ))}
+                <button className="tp-book-btn">Book Now</button>
+                <button className="tp-enquiry-btn">Make an enquiry</button>
+                <div className="tp-trust-row">
+                  <div className="tp-trust-item"><span><img src="/icons/secured.svg"/></span><small>Secure Booking</small></div>
+                  <div className="tp-trust-item"><span><img src="/icons/licensed.svg"/></span><small>Licensed Company</small></div>
+                  <div className="tp-trust-item"><span><img src="/icons/guarantee.svg"/></span><small>Best Price Guarantee</small></div>
+                </div>
+              </div>
             </div>
 
-            <div className="tp-deposit-box">
-              <strong>Secure with just ${trek.pricing.depositAmount}</strong>
-              <span>Pay remaining balance anytime before trek</span>
+            {/* Expert card */}
+            <div className="tp-sidebar-expert">
+              <div className="tp-expert-card">
+                <div className="tp-expert-header">
+                  <strong>Need Expert Advice?</strong>
+                  <span>Our trek specialists are here to help.</span>
+                </div>
+                <a href="tel:+97714952211" className="tp-contact-row">
+                  <span className="tp-contact-icon tp-contact-icon--phone">📞</span>
+                  <div><div className="tp-contact-label">Call us now!</div><div className="tp-contact-val">+977-1-4952211</div></div>
+                </a>
+                <a href="https://wa.me/97714952211" className="tp-contact-row">
+                  <span className="tp-contact-icon tp-contact-icon--wa">💬</span>
+                  <div><div className="tp-contact-label">Chat with us now!</div><div className="tp-contact-val">+977-1-4952211</div></div>
+                </a>
+                <a href="mailto:Info.hsj@gmail.com" className="tp-contact-row">
+                  <span className="tp-contact-icon tp-contact-icon--mail">✉️</span>
+                  <div><div className="tp-contact-label">Mail us now!</div><div className="tp-contact-val">Info.hsj@gmail.com</div></div>
+                </a>
+                <div className="tp-expert-footer">
+                  <strong>15+ years experience</strong>
+                  <span>Response within 24 hours</span>
+                </div>
+              </div>
             </div>
 
-            <button className="tp-book-btn">Book Now</button>
-            <button className="tp-enquiry-btn">Make an enquiry</button>
-
-            <div className="tp-trust-row">
-              <div className="tp-trust-item"><span><img src="/icons/secured.svg"/></span><small>Secure Booking</small></div>
-              <div className="tp-trust-item"><span style={{color:"#1a3c6e"}}><img src="/icons/licensed.svg"/></span><small>Licensed Company</small></div>
-              <div className="tp-trust-item"><span style={{color:"#e53"}}><img src="/icons/guarantee.svg"/></span><small>Best Price Guarantee</small></div>
+          </div>
+        </aside>
+      </div>
+      {/* REVIEWS — FULL WIDTH, outside tp-body */}
+      <div className="tp-section tp-reviews-section" data-section="Reviews" ref={el => { sectionRefs.current["Reviews"] = el; }}>
+        {/* Review Cards */}
+         <h2 className="tp-reviews-title">
+           <span className="tp-reviews-icon"><img src="/icons/testimonials.svg"/></span> Testimonials
+          </h2>
+        <div className="tp-reviews-wave-wrapper">
+            <svg className="tp-tear-svg" viewBox="0 0 1440 319" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="torn-paper" x="-4" y="0" width="1448" height="319" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                  <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                  <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                  <feTurbulence type="fractalNoise" baseFrequency="0.0666 0.0666" numOctaves={3} seed={482} />
+                  <feDisplacementMap in="shape" scale={8} xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+                  <feMerge><feMergeNode in="displacedImage"/></feMerge>
+                </filter>
+              </defs>
+              <rect y="4" width="1440" height="311" fill="#174B8B" filter="url(#torn-paper)" />
+            </svg>
+            <div className="tp-reviews-wave">
+              <div className="tp-reviews-scroll">
+                {trek.reviews.map((r, i) => (
+                  <div key={i} className="tp-review-card">
+                    <div className="tp-review-top">
+                      <img src={r.avatar} alt={r.name} className="tp-review-avatar"
+                        onError={e => { (e.target as HTMLImageElement).src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(r.name) + "&background=1a3c6e&color=fff"; }} />
+                      <div className="tp-review-name">{r.name}</div>
+                      <div className="tp-review-platform">
+                        {r.platform === "google"
+                          ? <img src="/icons/goog.svg" style={{ width: "45px" }} />
+                          : <img src="/icons/tripAd.svg" style={{ width: "52px" }} />
+                        }
+                      </div>
+                    </div>
+                    <hr className="tp-review-divider" />
+                    <div className="tp-review-stars">{"★".repeat(r.rating)}</div>
+                    <div className="tp-review-title">{r.title}</div>
+                    <p className="tp-review-body">"{r.body}"</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        )}
-          {/* Expert advice card — shown on Departure/Map/FAQ tabs */}
-          {["Departure Dates", "Map", "Equipment", "FAQ"].includes(activeTab) && (
-            <div className="tp-expert-card">
-              <div className="tp-expert-header">
-                <strong>Need Expert Advice?</strong>
-                <span>Our trek specialists are here to help.</span>
+        {/* HSJ Moments */}
+        <div className="tp-moments">
+          <div className="tp-moments-header">
+            <h2 className="tp-moments-title">
+              <span className="tp-moments-icon"><img src="/icons/hsjmoments.svg"/></span> HSJ Moments
+            </h2>
+            <button className="tp-moments-expand">Expand All ▾</button>
+          </div>
+          <div className="tp-moments-grid">
+            {trek.moments.map((m, i) => (
+              <MomentCard key={i} m={m} />
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* RECOMMENDED TRIPS */}
+      <div className="tp-recommended">
+        <div className="tp-recommended-header">
+          <div className="tp-recommended-icon">
+            <img src="/icons/recommended.svg" style={{ width: "40px" }} />
+          </div>
+          <div>
+            <h2 className="tp-recommended-title">Recommended Trips</h2>
+            <p className="tp-recommended-sub">Handpicked experiences for your next adventure</p>
+          </div>
+        </div>
+
+        <div className="tp-recommended-scroll">
+          {trek.recommended.map((r, i) => (
+            <div key={i} className="tp-rec-card">
+              <div className="tp-rec-img-wrap">
+                <img src={r.image} alt={r.title} className="tp-rec-img" />
+                {r.featured && (
+                  <div className="tp-rec-badge"><img src="/icons/thunder.svg"/> Featured</div>
+                )}
+                <button className="tp-rec-heart"><img src="/icons/fav.svg"/></button>
               </div>
-              <a href="tel:+97714952211" className="tp-contact-row">
-                <span className="tp-contact-icon tp-contact-icon--phone">📞</span>
-                <div><div className="tp-contact-label">Call us now!</div><div className="tp-contact-val">+977-1-4952211</div></div>
-              </a>
-              <a href="https://wa.me/97714952211" className="tp-contact-row">
-                <span className="tp-contact-icon tp-contact-icon--wa">💬</span>
-                <div><div className="tp-contact-label">Chat with us now!</div><div className="tp-contact-val">+977-1-4952211</div></div>
-              </a>
-              <a href="mailto:Info.hsj@gmail.com" className="tp-contact-row">
-                <span className="tp-contact-icon tp-contact-icon--mail">✉️</span>
-                <div><div className="tp-contact-label">Mail us now!</div><div className="tp-contact-val">Info.hsj@gmail.com</div></div>
-              </a>
-              <div className="tp-expert-footer">
-                <strong>15+ years experience</strong>
-                <span>Response within 24 hours</span>
+              <div className="tp-rec-body">
+                <div className="tp-rec-meta">
+                  <span className="tp-rec-location"><img src="/icons/loc.svg" style={{height: 18}}/> {r.location}</span>
+                  <span className="tp-rec-divider">|</span>
+                  <span className="tp-rec-days"><img src="/icons/reclock.svg"/> {r.days} days</span>
+                </div>
+                <h3 className="tp-rec-title">{r.title}</h3>
+                <div className="group-price">
+                  <div className="tp-rec-price">${r.price}</div>
+                  <div className="tp-rec-original">Valued upto ${r.originalPrice}</div>
+                  <hr className="view-details-divider" />
+                  <Link href={`/trip/${r.slug}`} className="tp-rec-link">
+                    View Details →
+                  </Link>
+                </div>
               </div>
             </div>
-          )}
-        </aside>
+          ))}
+        </div>
       </div>
     </div>
   );
