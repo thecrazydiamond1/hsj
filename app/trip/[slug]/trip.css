@@ -1216,7 +1216,14 @@
   
 }
 
-
+@media(max-width:500px){
+  .tp-inc-exc-grid{
+    grid-template-columns: none;
+  }
+  .tp-pkg-card-header{
+    display: grid;
+  }
+}
 
 
 
