@@ -597,9 +597,12 @@ export default function TripPage({ params }: { params: { slug: string } }) {
       {/* REVIEWS — FULL WIDTH, outside tp-body */}
       <div className="tp-section tp-reviews-section" data-section="Reviews" ref={el => { sectionRefs.current["Reviews"] = el; }}>
         {/* Review Cards */}
+        <div className="tp-reviews">
+        <div className="tp-reviews-header">
          <h2 className="tp-reviews-title">
            <span className="tp-reviews-icon"><img src="/icons/testimonials.svg"/></span> Testimonials
           </h2>
+        </div>
         <div className="tp-reviews-wave-wrapper">
             <svg className="tp-tear-svg" viewBox="0 0 1440 319" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -636,6 +639,7 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                 ))}
               </div>
             </div>
+          </div>
           </div>
         {/* HSJ Moments */}
         <div className="tp-moments">

@@ -510,6 +510,8 @@
 .tp-faq-a p { font-size: 0.75rem; color: #000000; line-height: 1.65; margin: 0; }
 
 /* ── REVIEWS ── */
+.tp-reviews{ margin: 1.5rem 0 0 1.5rem;}
+
 .tp-review-card { background: #fff; border-radius: 15px; padding: 1.25rem 1.25rem 0 1.25rem; min-width: 260px; max-width: 320px; flex-shrink: 0; }
 .tp-review-top { display: flex; align-items: center; gap: 1.8rem; margin-bottom: 1rem; }
 .tp-review-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #dce8f5; }
@@ -521,7 +523,6 @@
 .tp-review-divider { border: 0.6px solid #e9eff5}
 .tp-reviews-wave-wrapper {
   position: relative;
-  margin: 0 0 0 1.5rem;
 }
 
 .tp-tear-svg {
@@ -565,14 +566,16 @@
 /* HSJ Moments */
 .tp-moments { margin: 1.5rem 0 0 1.5rem;}
 
-.tp-moments-header {
+.tp-moments-header,
+.tp-reviews-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.tp-moments-title {
+.tp-moments-title,
+.tp-reviews-title {
   display: flex;
   align-items: center;
   gap: 0.9rem;
