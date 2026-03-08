@@ -501,12 +501,12 @@ export default function TripPage({ params }: { params: { slug: string } }) {
               </div>
             </div>
         </div>
-
+        {/* {Sidebar} */}
         <aside className="tp-sidebar">
           <div
             className="tp-sidebar-card-wrap"
             style={{
-              transform: showPrice ? "translateY(0px)" : `translateY(-600px)`,  /* exact sidebar height */
+              transform: showPrice ? "translateY(0px)" : `translateY(-570px)`,
               transition: "transform 1s cubic-bezier(0.4, 0, 0.2, 1)"
             }}
           >    
