@@ -197,8 +197,8 @@ export default function TripPage({ params }: { params: { slug: string } }) {
               {i === 3 && trek.images.length > 5 && (
                 <div className="tp-photo-more"     
                   onClick={e => {
-                  e.stopPropagation(); // prevent the parent div's onClick
-                  setLightboxIndex(4);  // open at 5th photo (first hidden one)
+                  e.stopPropagation(); 
+                  setLightboxIndex(4);  
                 }}>
                   +{trek.images.length - 4}</div>
                )}
