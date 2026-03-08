@@ -133,6 +133,17 @@ export default function TripPage({ params }: { params: { slug: string } }) {
     };
   }, [tripType]);
   
+    useEffect(() => {
+      const tabButton = document.querySelector(`[data-tab="${activeTab}"]`);
+      if (tabButton) {
+        tabButton.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center"
+        });
+      }
+    }, [activeTab]);
+
   const scrollToSection = (name: string) => {
     sectionRefs.current[name]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -235,6 +246,7 @@ export default function TripPage({ params }: { params: { slug: string } }) {
           {tabs.map(tab => (
             <button
               key={tab}
+              data-tab={tab}
               className={`tp-tab${activeTab === tab ? " tp-tab--active" : ""}`}
               onClick={() => scrollToSection(tab)}
             >
