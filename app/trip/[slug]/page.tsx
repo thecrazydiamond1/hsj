@@ -556,17 +556,18 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                   <span>Our trek specialists are here to help.</span>
                 </div>
                 <a href="tel:+97714952211" className="tp-contact-row">
-                  <span className="tp-contact-icon tp-contact-icon--phone">📞</span>
+                  <span className="tp-contact-icon tp-contact-icon--phone"><img src="/icons/expert-whatsapp.svg"/></span>
                   <div><div className="tp-contact-label">Call us now!</div><div className="tp-contact-val">+977-1-4952211</div></div>
                 </a>
                 <a href="https://wa.me/97714952211" className="tp-contact-row">
-                  <span className="tp-contact-icon tp-contact-icon--wa">💬</span>
+                  <span className="tp-contact-icon tp-contact-icon--wa"><img src="/icons/expert-call.svg"/></span>
                   <div><div className="tp-contact-label">Chat with us now!</div><div className="tp-contact-val">+977-1-4952211</div></div>
                 </a>
                 <a href="mailto:Info.hsj@gmail.com" className="tp-contact-row">
-                  <span className="tp-contact-icon tp-contact-icon--mail">✉️</span>
+                  <span className="tp-contact-icon tp-contact-icon--mail"><img src="/icons/expert-email.svg"/></span>
                   <div><div className="tp-contact-label">Mail us now!</div><div className="tp-contact-val">Info.hsj@gmail.com</div></div>
                 </a>
+                <hr className="expert-card-divider"/>
                 <div className="tp-expert-footer">
                   <strong>15+ years experience</strong>
                   <span>Response within 24 hours</span>
