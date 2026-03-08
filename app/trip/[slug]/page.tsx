@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react"; // add useEffect, useRef
 import "./trip.css";
 const tabs = ["Overview", "Itinerary", "Inclusions/Exclusions", "Departure Dates", "Map", "Equipment", "FAQ", "Reviews"];
 import dynamic from "next/dynamic";
-
+import Lightbox from "@/components/LightBox";
 
 // Add above your TripPage component
 function MomentCard({ m }: { m: { user: string; location: string; trek: string; desc: string; thumb: string; src: string } }) {
@@ -65,16 +65,9 @@ export default function TripPage({ params }: { params: { slug: string } }) {
   const [tripType, setTripType] = useState<"group" | "private">("group");
   const [openGear, setOpenGear] = useState<string[]>([]);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-
+ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const lastScrollY = useRef(0);
   const priceCardRef = useRef<HTMLDivElement>(null);
-  const [priceCardHeight, setPriceCardHeight] = useState(0);
-
-  useEffect(() => {
-    if (priceCardRef.current) {
-      setPriceCardHeight(priceCardRef.current.offsetHeight);
-    }
-  }, []);
 
   const showPrice = ["Overview", "Itinerary", "Inclusions/Exclusions"].includes(activeTab);
     const TrekMap = dynamic(() => import("@/components/TrekMap"), {
@@ -159,7 +152,13 @@ export default function TripPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="tp-page">
-
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={trek.images}
+          startIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
       {/* ── BREADCRUMB + TITLE ── */}
       <div className="tp-header">
         <div className="tp-header-inner">
@@ -190,13 +189,18 @@ export default function TripPage({ params }: { params: { slug: string } }) {
 
       {/* ── PHOTO GRID ── */}
       <div className="tp-photo-grid">
-        <img src={trek.images[0]} alt={trek.title} className="tp-photo-main" />
+        <img src={trek.images[0]} alt={trek.title} className="tp-photo-main"  onClick={() => setLightboxIndex(0)}/>
         <div className="tp-photo-side">
           {trek.images.slice(1, 5).map((img, i) => (
-            <div key={i} className={`tp-photo-thumb ${i === 3 ? "tp-photo-last" : ""}`}>
+            <div key={i} className={`tp-photo-thumb ${i === 3 ? "tp-photo-last" : ""}`} onClick={() => setLightboxIndex(i + 1)}>
               <img src={img} alt={`${trek.title} ${i + 1}`} />
               {i === 3 && trek.images.length > 5 && (
-                <div className="tp-photo-more">+{trek.images.length - 4}</div>
+                <div className="tp-photo-more"     
+                  onClick={e => {
+                  e.stopPropagation(); // prevent the parent div's onClick
+                  setLightboxIndex(4);  // open at 5th photo (first hidden one)
+                }}>
+                  +{trek.images.length - 4}</div>
                )}
             </div>
           ))}
