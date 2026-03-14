@@ -291,7 +291,10 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                       ? setOpenDays([])
                       : setOpenDays(trek.itinerary.map(d => d.day))
                   }>
-                    {openDays.length === trek.itinerary.length ? "Collapse All ▲" : "Expand All ▼"}
+                  {openDays.length === trek.itinerary.length
+                      ? <>Collapse All <img src="/icons/up.svg" /> </>
+                      : <>Expand All <img src="/icons/arrow.svg" /> </>
+                    }                  
                   </button>
                 </div>
                 <div className="tp-itinerary-duration"><img src="/icons/clock.svg"/>  {trek.stats.duration}</div>
@@ -310,7 +313,7 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                               <span><img src="/icons/easy.svg" />  {day.difficulty}</span>
                             </div>
                           </div>
-                          <span className="tp-day-chevron">{openDays.includes(day.day) ? "▲" : "▼"}</span>
+                          <span className="tp-day-chevron">{openDays.includes(day.day) ? <img src="/icons/up.svg"/> : <img src="/icons/arrow.svg"/>}</span>
                         </button>
                         {openDays.includes(day.day) && (
                           <div className="tp-day-body">{day.description}</div>
@@ -484,7 +487,7 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                   <button className="tp-expand-all" onClick={() => {
                     const allKeys = trek.faqs.flatMap(f => f.questions.map((q, i) => `${f.category}-${i}`));
                     setOpenFaqs(openFaqs.length === allKeys.length ? [] : allKeys);
-                  }}>Expand All ▼</button>
+                  }}><>Expand All <img src="/icons/arrow.svg" /></></button>
                 </div>
                 <p className="tp-faq-intro">Find answers to the most common questions about the {trek.title}. Can't find what you're looking for? Contact us directly!</p>
                 {trek.faqs.map(section => (
@@ -501,7 +504,7 @@ export default function TripPage({ params }: { params: { slug: string } }) {
                           <button className="tp-faq-q" onClick={() => toggleFaq(key)}>
                             <span className="tp-faq-dot" />
                             {q.q}
-                            <span className="tp-faq-chev">{isOpen ? "▲" : "▼"}</span>
+                            <span className="tp-faq-chev">{isOpen ? <img src="/icons/up.svg" /> : <img src="/icons/arrow.svg" />}</span>
                           </button>
                           {isOpen && (
                             <div className="tp-faq-a">
